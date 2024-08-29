@@ -43,6 +43,7 @@
 #include "audio/effects/audio_effect_distortion.h"
 #include "audio/effects/audio_effect_eq.h"
 #include "audio/effects/audio_effect_filter.h"
+#include "audio/effects/audio_effect_generator.h"
 #include "audio/effects/audio_effect_hard_limiter.h"
 #include "audio/effects/audio_effect_limiter.h"
 #include "audio/effects/audio_effect_panner.h"
@@ -223,6 +224,8 @@ void register_server_types() {
 		GDREGISTER_ABSTRACT_CLASS(AudioEffectSpectrumAnalyzerInstance);
 
 		GDREGISTER_CLASS(AudioEffectCapture);
+
+		GDREGISTER_CLASS(AudioEffectGenerator);
 	}
 
 	GDREGISTER_ABSTRACT_CLASS(RenderingDevice);
