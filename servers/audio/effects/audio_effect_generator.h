@@ -187,8 +187,6 @@ class AudioEffectGeneratorInstance : public AudioEffectInstance {
 				return generator_instance.tone;
 				break;
 		}
-
-		return nullptr;
 	}
 
 public:
