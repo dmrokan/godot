@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AudioStreamToneGenerator" inherits="AudioStream" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../class.xsd">
+	<brief_description>
+		An audio stream that generates periodic waveforms according to the provided variables.
+	</brief_description>
+	<description>
+		[AudioStreamToneGenerator] can generate periodic waveforms from software sine, saw tooth, rectangular and Van der Pol oscillators.
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="buffer_length" type="float" setter="set_buffer_length" getter="get_buffer_length" default="0.5">
+			Sets the duration of audio signal.
+		</member>
+		<member name="damping" type="float" setter="set_damping" getter="get_damping" default="0">
+			If damping is greater than zero, generated audio fades away exponentially by time. The larger the damping, the faster the audio fades.
+		</member>
+		<member name="frequency" type="float" setter="set_frequency" getter="get_frequency" default="400">
+			Adjust the frequency of generated audio signal.
+			[b]Note:[/b] It does not correspond to the actual frequency for Van der Pol oscillator but it can be interpreted as density of peaks.
+		</member>
+		<member name="gain" type="float" setter="set_gain" getter="get_gain" default="0.0">
+			Adjusts the peak value of periodic audio signals.
+		</member>
+		<member name="mix_rate" type="float" setter="set_mix_rate" getter="get_mix_rate" default="44100.0">
+			Adjusts the sampling rate of audio signal.
+		</member>
+		<member name="phase" type="float" setter="set_phase" getter="get_phase" default="0">
+			Adjust the phase of periodic audio signal.
+		</member>
+		<member name="type" type="String" setter="set_type" getter="get_type" default="&quot;Tone&quot;">
+			Selects type of waveform from a list of [code]Tone (sine), Saw (saw tooth), Rect (rectangular), VanDerPol[/code].
+		</member>
+	</members>
+</class>

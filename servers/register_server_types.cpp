@@ -43,9 +43,9 @@
 #include "audio/effects/audio_effect_distortion.h"
 #include "audio/effects/audio_effect_eq.h"
 #include "audio/effects/audio_effect_filter.h"
-#include "audio/effects/audio_effect_generator.h"
 #include "audio/effects/audio_effect_hard_limiter.h"
 #include "audio/effects/audio_effect_limiter.h"
+#include "audio/effects/audio_effect_noise.h"
 #include "audio/effects/audio_effect_panner.h"
 #include "audio/effects/audio_effect_phaser.h"
 #include "audio/effects/audio_effect_pitch_shift.h"
@@ -54,6 +54,7 @@
 #include "audio/effects/audio_effect_spectrum_analyzer.h"
 #include "audio/effects/audio_effect_stereo_enhance.h"
 #include "audio/effects/audio_stream_generator.h"
+#include "audio/effects/audio_stream_tone_generator.h"
 #include "audio_server.h"
 #include "camera/camera_feed.h"
 #include "camera_server.h"
@@ -188,6 +189,9 @@ void register_server_types() {
 	GDREGISTER_CLASS(AudioStreamGenerator);
 	GDREGISTER_ABSTRACT_CLASS(AudioStreamGeneratorPlayback);
 
+	GDREGISTER_CLASS(AudioStreamToneGenerator);
+	GDREGISTER_ABSTRACT_CLASS(AudioStreamToneGeneratorPlayback);
+
 	{
 		//audio effects
 		GDREGISTER_CLASS(AudioEffectAmplify);
@@ -225,7 +229,7 @@ void register_server_types() {
 
 		GDREGISTER_CLASS(AudioEffectCapture);
 
-		GDREGISTER_CLASS(AudioEffectGenerator);
+		GDREGISTER_CLASS(AudioEffectNoise);
 	}
 
 	GDREGISTER_ABSTRACT_CLASS(RenderingDevice);
