@@ -113,6 +113,11 @@ AudioFrame AudioRectGeneratorFrame::next() {
 }
 
 void AudioVanDerPolGeneratorFrame::update_parameters() {
+	if (stream == nullptr)
+		return;
+
+	AudioGeneratorFrame::update_parameters();
+
 	double eps = 1.9;
 	double alpha = eps / 2;
 	double beta = Math::sqrt(1 - alpha * alpha);
@@ -208,9 +213,8 @@ String AudioStreamToneGenerator::get_type() const {
 
 void AudioStreamToneGenerator::set_frequency(float p_frequency) {
 	frequency = MIN(p_frequency, mix_rate / 2.0);
-	if (frame.is_valid()) {
+	if (frame.is_valid())
 		frame->update_parameters();
-	}
 }
 
 float AudioStreamToneGenerator::get_frequency() const {
@@ -219,9 +223,8 @@ float AudioStreamToneGenerator::get_frequency() const {
 
 void AudioStreamToneGenerator::set_damping(float p_damping) {
 	damping = p_damping;
-	if (frame.is_valid()) {
+	if (frame.is_valid())
 		frame->update_parameters();
-	}
 }
 
 float AudioStreamToneGenerator::get_damping() const {
@@ -230,9 +233,8 @@ float AudioStreamToneGenerator::get_damping() const {
 
 void AudioStreamToneGenerator::set_phase(float p_phase) {
 	phase = p_phase;
-	if (frame.is_valid()) {
+	if (frame.is_valid())
 		frame->update_parameters();
-	}
 }
 
 float AudioStreamToneGenerator::get_phase() const {
