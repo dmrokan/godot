@@ -138,7 +138,8 @@ AudioFrame AudioVanDerPolGeneratorFrame::next() {
 	double eps = 1.9;
 	double p = state.x[0];
 	double q = state.x[1];
-	float output = q * state.x[2];
+	// NOTE: Van der Pol oscillators peak value is nearly 4, so it is scaled by 1/4
+	float output = 0.25f * q * state.x[2];
 
 	double dp = params.psi * p + params.phi * q;
 	p += params.T * dp;
@@ -197,6 +198,11 @@ void AudioStreamToneGenerator::set_type(const String &p_type) {
 	} else if (p_type == "VanDerPol") {
 		type = p_type;
 		Ref<AudioVanDerPolGeneratorFrame> tmp;
+		tmp.instantiate();
+		frame = tmp;
+	} else if (p_type == "Silence") {
+		type = p_type;
+		Ref<AudioGeneratorFrame> tmp;
 		tmp.instantiate();
 		frame = tmp;
 	}
@@ -262,7 +268,18 @@ String AudioStreamToneGenerator::get_stream_name() const {
 }
 
 double AudioStreamToneGenerator::get_length() const {
-	return buffer_len;
+	if (is_playback_active)
+		return buffer_len;
+
+	return 0;
+}
+
+double AudioStreamToneGenerator::get_bpm() const {
+	return mix_rate * 60.0;
+}
+
+int AudioStreamToneGenerator::get_beat_count() const {
+	return mix_rate * get_length();
 }
 
 bool AudioStreamToneGenerator::is_monophonic() const {
@@ -287,7 +304,7 @@ void AudioStreamToneGenerator::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_gain", "gain"), &AudioStreamToneGenerator::set_gain);
 	ClassDB::bind_method(D_METHOD("get_gain"), &AudioStreamToneGenerator::get_gain);
 
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "type", PROPERTY_HINT_ENUM, "Tone,Saw,Rect,VanDerPol"), "set_type", "get_type");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "type", PROPERTY_HINT_ENUM, "Tone,Saw,Rect,VanDerPol,Silence"), "set_type", "get_type");
 	ADD_PROPERTY_DEFAULT("type", "Tone");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "mix_rate", PROPERTY_HINT_RANGE, "20,192000,1,suffix:Hz"), "set_mix_rate", "get_mix_rate");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "buffer_length", PROPERTY_HINT_RANGE, "0.01,10,0.01,suffix:s"), "set_buffer_length", "get_buffer_length");
@@ -311,6 +328,7 @@ AudioStreamToneGenerator::AudioStreamToneGenerator() {
 	damping = 0;
 	gain = 0;
 	gain_linear = 1;
+	is_playback_active = false;
 	Ref<AudioToneGeneratorFrame> tmp;
 	tmp.instantiate();
 	frame = tmp;
@@ -346,13 +364,17 @@ void AudioStreamToneGeneratorPlayback::start(double p_from_pos) {
 	}
 	active = true;
 	mixed = 0.0;
-
-	if (generator != nullptr && generator->frame != nullptr)
-		generator->frame->update_parameters();
+	if (generator != nullptr) {
+		generator->is_playback_active = true;
+		if (generator->frame.is_valid())
+			generator->frame->update_parameters();
+	}
 }
 
 void AudioStreamToneGeneratorPlayback::stop() {
 	active = false;
+	if (generator != nullptr)
+		generator->is_playback_active = false;
 }
 
 bool AudioStreamToneGeneratorPlayback::is_playing() const {

@@ -125,6 +125,7 @@ class AudioStreamToneGenerator : public AudioStream {
 	float damping;
 	float gain;
 	float gain_linear;
+	bool is_playback_active;
 
 	Ref<AudioGeneratorFrame> frame;
 
@@ -152,6 +153,8 @@ public:
 	virtual Ref<AudioStreamPlayback> instantiate_playback() override;
 	virtual String get_stream_name() const override;
 
+	virtual double get_bpm() const override;
+	virtual int get_beat_count() const override;
 	virtual double get_length() const override;
 	virtual bool is_monophonic() const override;
 
