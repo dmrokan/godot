@@ -42,21 +42,20 @@ void AudioToneGeneratorFrame::update_parameters() {
 	if (stream == nullptr)
 		return;
 
-	double normalized_frequency = 2.0 * (double)stream->frequency / stream->mix_rate;
+	double freq = stream->frequency < 1.0 ? 1.0 : stream->frequency;
+	double normalized_frequency = 2.0 * freq / stream->mix_rate;
 	double normalized_damping = Math::exp(-(double)stream->damping / stream->mix_rate);
 	double d = normalized_damping;
 	double om = Math_PI * normalized_frequency;
-	double c = -d * Math::cos(om);
-	// NOTE: (d*cos(om))^2 = c^2 <= d^2 is always satisfied.
-	double b = Math::sqrt(d * d - c * c);
-	params.A[0] = -2 * c;
+	double c = d * Math::cos(om);
+	double b = d * Math::sin(om);
+	params.A[0] = 2 * c;
 	params.A[1] = -d * d;
 	params.C = b;
 
 	double psi = Math::deg_to_rad((double)stream->phase);
-	double C = params.C;
-	double x1_0 = Math::cos(psi) / C;
-	double x1_1 = Math::cos(Math_PI * normalized_frequency + psi) / C;
+	double x1_0 = Math::cos(psi) / b;
+	double x1_1 = Math::cos(Math_PI * normalized_frequency + psi) / b;
 	double x2_0 = (x1_1 - params.A[0] * x1_0) / params.A[1];
 	state.x[0] = x1_0;
 	state.x[1] = x2_0;
@@ -79,7 +78,7 @@ void AudioSawGeneratorFrame::update_parameters() {
 	params.damping = Math::exp(-(double)stream->damping / stream->mix_rate);
 
 	double psi = Math::deg_to_rad((double)stream->phase);
-	state.x[0] = 2.0 * psi / Math_PI - 1.0;
+	state.x[0] = psi / Math_PI - 1.0;
 	state.x[1] = 0.0;
 	state.x[2] = 1.0;
 }
@@ -200,7 +199,7 @@ void AudioStreamToneGenerator::set_type(const String &p_type) {
 		Ref<AudioVanDerPolGeneratorFrame> tmp;
 		tmp.instantiate();
 		frame = tmp;
-	} else if (p_type == "Silence") {
+	} else {
 		type = p_type;
 		Ref<AudioGeneratorFrame> tmp;
 		tmp.instantiate();
