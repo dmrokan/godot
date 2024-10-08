@@ -105,7 +105,7 @@ class AudioEffectGrayNoiseFrame : public AudioEffectNoiseFrame {
 	GDCLASS(AudioEffectGrayNoiseFrame, AudioEffectNoiseFrame);
 
 	struct State {
-		static constexpr int n = 9;
+		static constexpr int n = 7;
 		float x[n + 1];
 	} state;
 	struct {

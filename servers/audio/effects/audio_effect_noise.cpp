@@ -119,15 +119,13 @@ AudioEffectGrayNoiseFrame::AudioEffectGrayNoiseFrame() {
 		state.x[i] = 0.0f;
 	}
 
-	params.h[0] = 0.001765411118332865f;
-	params.h[1] = 0.003698427894877145f;
-	params.h[2] = 0.189782233656845406f;
-	params.h[3] = 0.039720832423538716f;
-	params.h[4] = 0.530066189812811617f;
-	params.h[5] = 0.039720832423538743f;
-	params.h[6] = 0.189782233656845462f;
-	params.h[7] = 0.003698427894877145f;
-	params.h[8] = 0.001765411118332865f;
+	params.h[0] = 0.13095192f;
+	params.h[1] = 0.14271321f;
+	params.h[2] = -0.10107508f;
+	params.h[3] = 0.65481989f;
+	params.h[4] = -0.10107508f;
+	params.h[5] = 0.14271321f;
+	params.h[6] = 0.13095192f;
 }
 
 /////////////////
@@ -156,12 +154,7 @@ void AudioEffectNoise::set_type(const String &p_type) {
 	if (frame.is_valid())
 		frame.unref();
 
-	if (p_type == "White") {
-		type = p_type;
-		Ref<AudioEffectWhiteNoiseFrame> tmp;
-		tmp.instantiate();
-		frame = tmp;
-	} else if (p_type == "Brown") {
+	if (p_type == "Brown") {
 		type = p_type;
 		Ref<AudioEffectBrownNoiseFrame> tmp;
 		tmp.instantiate();
@@ -179,6 +172,11 @@ void AudioEffectNoise::set_type(const String &p_type) {
 	} else if (p_type == "Gray") {
 		type = p_type;
 		Ref<AudioEffectGrayNoiseFrame> tmp;
+		tmp.instantiate();
+		frame = tmp;
+	} else {
+		type = "White";
+		Ref<AudioEffectWhiteNoiseFrame> tmp;
 		tmp.instantiate();
 		frame = tmp;
 	}

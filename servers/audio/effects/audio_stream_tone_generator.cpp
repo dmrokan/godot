@@ -55,7 +55,7 @@ void AudioToneGeneratorFrame::update_parameters() {
 
 	double psi = Math::deg_to_rad((double)stream->phase);
 	double x1_0 = Math::cos(psi) / b;
-	double x1_1 = Math::cos(Math_PI * normalized_frequency + psi) / b;
+	double x1_1 = d * Math::cos(Math_PI * normalized_frequency + psi) / b;
 	double x2_0 = (x1_1 - params.A[0] * x1_0) / params.A[1];
 	state.x[0] = x1_0;
 	state.x[1] = x2_0;
@@ -124,7 +124,7 @@ void AudioVanDerPolGeneratorFrame::update_parameters() {
 	params.T = 1.0 / (stream->mix_rate / f);
 	double c1 = Math::exp(alpha * params.T);
 	double c2 = beta * params.T;
-	params.psi = (c1 * (Math::cos(c2) - eps * Math::sin(c2) / 2.0 / beta) - 1.0) / params.T;
+	params.psi = (c1 * (Math::cos(c2) - alpha * Math::sin(c2) / beta) - 1.0) / params.T;
 	params.phi = c1 * Math::sin(c2) / beta / params.T;
 	params.damping = Math::exp(-(double)stream->damping / stream->mix_rate);
 
@@ -200,7 +200,7 @@ void AudioStreamToneGenerator::set_type(const String &p_type) {
 		tmp.instantiate();
 		frame = tmp;
 	} else {
-		type = p_type;
+		type = "Silence";
 		Ref<AudioGeneratorFrame> tmp;
 		tmp.instantiate();
 		frame = tmp;
